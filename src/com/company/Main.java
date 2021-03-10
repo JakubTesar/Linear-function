@@ -1,8 +1,6 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Main {
@@ -10,22 +8,44 @@ public class Main {
     public static void main(String[] args) {
         LinearFunction functionVariable = new LinearFunction();
 
-        ArrayList<LinearFunction> arrFunctions = new ArrayList<LinearFunction>();
+        ArrayList<LinearFunction> arrFunctions = new ArrayList<>();
 
         try {
             BufferedReader br = new BufferedReader(new FileReader("functions.txt"));
             String nextLine = br.readLine();
 
-            while(nextLine != null) {
-                nextLine = br.readLine();
+            for (int i = 0; nextLine != null; i++) {
                 functionVariable.functionClass = nextLine;
                 arrFunctions.add(functionVariable);
-            }
-        } catch (IOException e) {}
+                nextLine = br.readLine();
 
-        for (int i = 0; i < arrFunctions.size(); i++) {
-            System.out.println(arrFunctions.get(i));
+                System.out.println(arrFunctions.get(i).functionClass);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int count = arrFunctions.size();
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter("count.txt"));
+                bw.write(count+"");
+            bw.close();
+        } catch (IOException e) {
+            System.out.println(e);
         }
 
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter("count_distinct.txt"));
+            for (int i = 0; i < arrFunctions.size(); i++) {
+                bw.write(arrFunctions.get(i).functionClass);
+                bw.newLine();
+            }
+            bw.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        System.out.println(count);
     }
 }

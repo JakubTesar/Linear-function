@@ -6,46 +6,70 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-        LinearFunction functionVariable = new LinearFunction();
-
         ArrayList<LinearFunction> arrFunctions = new ArrayList<>();
 
         try {
             BufferedReader br = new BufferedReader(new FileReader("functions.txt"));
             String nextLine = br.readLine();
 
-            for (int i = 0; nextLine != null; i++) {
-                functionVariable.functionClass = nextLine;
-                arrFunctions.add(functionVariable);
+            while (nextLine != null) {
+                LinearFunction function = new LinearFunction();
+
+                String[] raw = nextLine.substring(3).split(" " + (char) 42 + " ");
+
+                function.a = Integer.parseInt(raw[1].substring(0, raw[1].length() - 1));
+                function.b = Integer.parseInt(raw[3]);
+
+                arrFunctions.add(function);
                 nextLine = br.readLine();
-
-                System.out.println(arrFunctions.get(i).functionClass);
             }
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         int count = arrFunctions.size();
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter("count.txt"));
-                bw.write(count+"");
+            bw.write(count + "");
             bw.close();
         } catch (IOException e) {
             System.out.println(e);
         }
 
+        int duplicity2 = 0;
+        int special = 0;
+
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter("count_distinct.txt"));
+
             for (int i = 0; i < arrFunctions.size(); i++) {
-                bw.write(arrFunctions.get(i).functionClass);
-                bw.newLine();
+                int duplicity = 0;
+
+                int a1 = arrFunctions.get(i).a;
+                int b1 = arrFunctions.get(i).b;
+
+                for (LinearFunction arrFunction : arrFunctions) {
+                    int a2 = arrFunction.a;
+                    int b2 = arrFunction.b;
+
+                    if (a1 == a2 && b1 == b2) {
+                        duplicity++;
+                    }
+                }
+                if (duplicity >= 2) {
+                    duplicity2++;
+                }
             }
+            special = arrFunctions.size() - duplicity2;
+
+            bw.write(String.valueOf(special));
+
             bw.close();
         } catch (IOException e) {
             System.out.println(e);
         }
-        System.out.println(count);
+
     }
 }
